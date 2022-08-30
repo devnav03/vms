@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Model\UserDetail;
 use App\Model\Transaction;
 use App\Model\Symptom;
+use Intervention\Image\ImageManagerStatic as Image;
 use App\Model\AllVisit;
 use App\Model\Location;
 use App\Events\SmsEvent;
@@ -153,24 +154,38 @@ class PreInvitationController extends Controller
 
     public function store(Request $request)
     {
-		 $cidata=$request->session()->get('CIDATA');
+         $cidata=$request->session()->get('CIDATA');
             $cidata_ob=json_decode($cidata);
-		
+        
         $user_id =  auth('admin')->user()->id;
         $this->validate($request, [
             'name'=>'required',
+            'image'=>'required',
             'mobile'=>'required|numeric|digits:10',
             'pre_visit_date_time'=>'required',
-			'email'=>'required|email'
+            'email'=>'required|email'
         ]);
         
         if($request->image){
-            $imagePath = $request['image'];
-            $milliseconds = round(microtime(true) * 1000);
-            $file_name = $milliseconds . $imagePath->getClientOriginalName();
-            $path = $request['image']->storeAs('uploads', $file_name, 'public');
-            $request->request->add(['image_f' => $path]);
-            $file_name='uploads/'.$file_name;
+            
+            //$imagePath = $request['image'];
+            //$milliseconds = round(microtime(true) * 1000);
+           // $file_name = $milliseconds . $imagePath->getClientOriginalName();
+           // $path = $request['image']->storeAs('uploads', $file_name, 'public');
+           // $request->request->add(['image_f' => $path]);
+           // $file_name='uploads/'.$file_name;
+           // $image = base64_encode(file_get_contents($request->file('image')));
+            
+            $image = $request->file('image');
+            $originalExtension = $image->getClientOriginalExtension();
+            $image_s = Image::make($image)->orientate();
+            $image_s->resize(230, null, function ($constraint) {
+                $constraint->aspectRatio();
+            });
+            $filename = random_int(9, 999999999) + time() . '.' . $originalExtension;
+            $image_s->save(public_path('/uploads/img/'.$filename));
+            
+            $file_name= $filename;
             $image = base64_encode(file_get_contents($request->file('image')));
         }else{
             $file_name ='';
@@ -178,24 +193,23 @@ class PreInvitationController extends Controller
         }
         
         
-
         $pin =rand(1000,9999);
         $store_user = new User;
         $store_user->name = $request->name;
         $store_user->mobile = $request->mobile;
         $store_user->email = $request->email;
-		$store_user->pre_visit_date_time = $request->pre_visit_date_time;
+        $store_user->pre_visit_date_time = $request->pre_visit_date_time;
         $store_user->officer_id = @$request->officer_id?@$request->officer_id:$user_id;
         $store_user->added_by = $user_id;
-		$store_user->company_id = $cidata_ob->cid;
-		$store_user->image = @$file_name;
-		$store_user->image_base = @$image;
+        $store_user->company_id = $cidata_ob->cid;
+        $store_user->image = @$file_name;
+        $store_user->image_base = @$image;
         $store_user->status = 2;
         $store_user->location_id = @$request->location_id;
         $store_user->building_id = @$request->building_id;
         $store_user->department_id = @$request->department_id;
-		$store_user->app_status = 'Approve';
-		$store_user->pre_invite_pin = $pin;
+        $store_user->app_status = 'Approve';
+        $store_user->pre_invite_pin = $pin;
         $settings = Setting::where(['company_id' => $store_user->company_id, 'name' => 'ams_send'])->first();
             
         if($store_user->save())
@@ -233,34 +247,32 @@ class PreInvitationController extends Controller
                 return back()->with(['message'=>'Oops! Something went wrong', 'class'=>'error']);
         }
 
-
-
     }
 
 	public function emailSendUser($user_id, $pin)
     {
         $user_details=User::where('id',$user_id)->with(['location'=>function($q){
-			$q->select('id','name');
-		},'building'=>function($q){
-			$q->select('id','name');
-		}])->first();
+            $q->select('id','name');
+        },'building'=>function($q){
+            $q->select('id','name');
+        }])->first();
 
-		$office_details=Admin::where('id',$user_details->officer_id)->first();
-
+        $office_details=Admin::where('id',$user_details->officer_id)->first();
+        $image = $user_details->image;
         $reception_name = 'Self Registration';
-		$user_email = $user_details->email;
+        $user_email = $user_details->email;
         $sub = $user_details->pre_visit_date_time;
         $appoint_date = date('d/m/Y', strtotime($user_details->pre_visit_date_time));
         $appoint_time = date('h:i:sa', strtotime($user_details->pre_visit_date_time));
-		$url=url("/pre-invitations/join/".$user_details->email."/".$user_details->id);
+        $url=url("/pre-invitations/join/".$user_details->email."/".$user_details->id);
         $res = json_decode($this->createShortLink($url));
       
-		$officer_name = ucfirst($office_details->name);
+        $officer_name = ucfirst($office_details->name);
       
         event(new SmsEvent($user_details->mobile, 'You are invited to visit '.$user_details->building->name.'('.$user_details->location->name.') on '.$appoint_date.' at '.$appoint_time.'. Pin '.$pin.' click here '.@$res->link.'. VMS Team'));
-	
-        // send mail to User  // comment by suresh
-        $data=['visitor_name'=>$officer_name,'app_date'=>$appoint_date,'appoint_time'=>$appoint_time,'url'=> $url,'officer_id'=>$user_id,'visitor_id'=>$user_details->refer_id,'duration'=>$user_details->visit_duration,'mobile'=>$office_details->mobile, 'pin'=>$pin,'building'=>$user_details->building->name,'location'=>$user_details->location->name];
+    
+      
+        $data=['visitor_name'=>$officer_name,'app_date'=>$appoint_date, 'image'=>$image,'appoint_time'=>$appoint_time,'url'=> $url,'officer_id'=>$user_id,'visitor_id'=>$user_details->refer_id,'duration'=>$user_details->visit_duration,'mobile'=>$office_details->mobile, 'pin'=>$pin,'building'=>$user_details->building->name,'location'=>$user_details->location->name];
         $res=Mail::send('mails.pre-invitation', $data, function($message) use ($user_email){
             $sub = Carbon::now()->toDateTimeString();;
             $message->subject('Appointment Invitation ('.$sub.')');

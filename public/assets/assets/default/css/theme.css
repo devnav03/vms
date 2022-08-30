@@ -148,6 +148,9 @@ select.valid{
 .guest_content ul li{
     display: inline;
 }
+.toast.toast-error{
+    background: #f00;
+}
 button {
     justify-content: center;
     align-items: center;
@@ -158,6 +161,7 @@ button {
     font-size: 14px;
     margin-right: 20px;
     line-height: 17px;
+    color: #000;
     border: none;
     transition: .4s ease-in-out;
     margin-bottom: 15px;
@@ -575,7 +579,7 @@ input[type=date]{
 .status_box ul li {
     display: inline-block;
     text-align: center;
-    padding: 5px 16px;
+    padding: 5px 10px;
     font-weight: 600;
 }
 .status_box ul2 {
@@ -780,4 +784,65 @@ select:focus {
 .sub_btn:focus{
     background-color: transparent;
 }
+.custom_immg{
+    width: 20%;
+    float: right;
+    margin-top: -44px;
+}
+.pagination nav {
+    background: transparent;
+    box-shadow: none;
+}
+.pagination nav li.active {
+    background-color: transparent;
+}
+.only_print{
+    display: none;
+}
+
+@media print {
+.noPrint{
+    display: none !important;
+}
+.only_print{
+    display: block;
+}
+.modal-header {
+    background: rgba(250, 147, 26, 0.5);
+    color: #ffffff;
+    text-align: center;
+    padding: 10px;
+    justify-content: center;
+}
+.modal-title {
+    margin-bottom: 0;
+    line-height: var(--bs-modal-title-line-height);
+    font-size: 55px;
+    font-weight: 700;
+}
+
+.col-md-4 {
+    flex: 0 0 auto;
+    width: 33.33333333%;
+}
+.bg-success {
+    --bs-bg-opacity: 1;
+    background-color: rgba(var(--bs-success-rgb),var(--bs-bg-opacity))!important;
+}
+.icon_text {
+    font-size: 16px;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+@page { size: auto;  margin: 0mm; }
+}
+
+
+
+
+
+
+
+
+
 

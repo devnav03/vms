@@ -1,4 +1,4 @@
-#header,
+/*#header,
 #nav,
 #meta,
 #footer,
@@ -12,8 +12,40 @@
 #loading,
 .buttons {
     display: none
+}*/
+.noPrint{
+    display: none !important;
+}
+.only_print{
+    display: block;
+}
+.modal-header {
+    background: rgba(250, 147, 26, 0.5);
+    color: #ffffff;
+    text-align: center;
+    padding: 10px;
+    justify-content: center;
+}
+.modal-title {
+    margin-bottom: 0;
+    line-height: var(--bs-modal-title-line-height);
+    font-size: 55px;
+    font-weight: 700;
 }
 
+.col-md-4 {
+    flex: 0 0 auto;
+    width: 33.33333333%;
+}
+.bg-success {
+    --bs-bg-opacity: 1;
+    background-color: rgba(var(--bs-success-rgb),var(--bs-bg-opacity))!important;
+}
+.icon_text {
+    font-size: 16px;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
 th {
     text-align: left
 }

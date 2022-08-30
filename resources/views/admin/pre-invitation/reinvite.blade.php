@@ -62,7 +62,7 @@
                         <div class="col-md-12">
                             <div class="col-md-12" style="text-align:center;padding-bottom: 22px;">
                                 <p>Visitor Image</p>
-                                <img src="{{str_replace("/public","",URL::to("/")).'/storage/app/public/'.@$menus->image}}" style="width: 140px;
+                                <img src="{!! asset('uploads/img/'.$menus->image) !!}" style="height: 140px;width: 140px;
                                 border-radius: 50%;">
                             </div>
                                {!! Form::open(['route'=>['admin.'.request()->segment(2).'.update',$user],'method'=>'put','style'=>'border: 1px solid #d5d2d2;padding: 21px;','files'=>true]) !!}

@@ -4,22 +4,22 @@
   <meta name="description" content="Visitor Management System">
   <meta name="keywords" content="Visitor Management System">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="{{asset('assets/css/osticket.css?cb6766e')}}" media="screen"/>
+  <link rel="stylesheet" href="{{asset('assets/css/osticket.css?cb6766e')}}"/>
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css'>
   <link rel="stylesheet" href="{{asset('assets/assets/default/css/print.css?cb6766e')}}" media="print"/>
   <link rel="stylesheet" href="{{asset('assets/scp/css/typeahead.css?cb6766e')}}" media="screen" />
-  <link type="text/css" href="{{asset('assets/css/ui-lightness/jquery-ui-1.10.3.custom.min.css?cb6766e')}}" rel="stylesheet" media="screen" />
+  <link type="text/css" href="{{asset('assets/css/ui-lightness/jquery-ui-1.10.3.custom.min.css?cb6766e')}}" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/inter-ui/3.19.3/inter.css" rel="stylesheet">
   <link rel="stylesheet" href="{{asset('assets/css/jquery-ui-timepicker-addon.css?cb6766e')}}" media="all"/>
-  <link rel="stylesheet" href="{{asset('assets/css/thread.css?cb6766e')}}" media="screen"/>
-  <link rel="stylesheet" href="{{asset('assets/css/redactor.css?cb6766e')}}" media="screen"/>
+  <link rel="stylesheet" href="{{asset('assets/css/thread.css?cb6766e')}}"/>
+  <link rel="stylesheet" href="{{asset('assets/css/redactor.css?cb6766e')}}"/>
   <link type="text/css" rel="stylesheet" href="{{asset('assets/css/font-awesome.min.css?cb6766e')}}"/>
   <link type="text/css" rel="stylesheet" href="{{asset('assets/css/flags.css?cb6766e')}}"/>
   <link type="text/css" rel="stylesheet" href="{{asset('assets/css/rtl.css?cb6766e')}}"/>
   <link type="text/css" rel="stylesheet" href="{{asset('assets/css/select2.min.css?cb6766e')}}"/>
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jstree/3.3.3/themes/default/style.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css"/>
-  <link rel="stylesheet" href="{{asset('assets/bootstrap/css/bootstrap.min.css')}}" media="screen" />
+  <link rel="stylesheet" href="{{asset('assets/bootstrap/css/bootstrap.min.css')}}" />
   <link rel="stylesheet" href="{{asset('assets/bootstrap-icons/bootstrap-icons.css')}}" /> 
   <link rel="stylesheet" href="{{asset('assets/aos/aos.css')}}" />
   <link rel="stylesheet" href="{{asset('assets/glightbox/css/glightbox.min.css')}}" />
@@ -46,7 +46,7 @@ $(document).ready(function () {
 </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="{{asset('assets/assets/default/css/theme.css?cb6766e')}}" media="screen"/>
+  <link rel="stylesheet" href="{{asset('assets/assets/default/css/theme.css?cb6766e')}}"/>
 </head>
 <body>
      
@@ -68,7 +68,6 @@ $(document).ready(function () {
     <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-auth.js"></script>
     <script type="text/javascript">
         const config = {
-         
 
             apiKey: "AIzaSyD2N4wFh5t26_tZI9b0AtSZ-P2zfWB7Hn8",
             authDomain: "vztor-255b0.firebaseapp.com",

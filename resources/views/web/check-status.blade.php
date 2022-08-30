@@ -1,5 +1,11 @@
 @extends('web.layouts.inner-master')
 @section('content')
+
+
+
+
+
+
 <style>
     label {
          color: #000;

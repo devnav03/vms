@@ -1,6 +1,66 @@
 @extends('web.layouts.inner-master')
 @section('content')
-<section>
+
+@php
+    $image = str_replace('/public','',URL::to('/')).'/storage/app/public/'.$visitor_detail->image;
+@endphp
+        <div class="modal-content only_print" style="width: 400px;    margin: 0 auto;">
+          <div class="modal-header" style="background: rgba(250, 147, 26, 0.5); color: #ffffff;
+    text-align: center; padding: 10px; justify-content: center;">
+            <h5 class="modal-title" id="staticBackdropLabel">Visitor</h5>
+          </div>
+          <div class="modal-body">
+              <div class="row">
+                  <div class="col-md-4" style="width: 33.33333333%;">
+                     <img src="{!! asset('uploads/img/'.$visitor_detail->image) !!}" width="100%">
+                  </div>
+                  <div class="col-md-8" style="width: 66.66666667%;">
+                        <div class="icon_text" style="font-size: 30px; font-weight: 100;">{{@$visitor_detail->name}}</div>
+                        <div class="icon_text">EMP00302020</div>
+                        <div class="icon_text">@if($visitor_detail->visite_time)
+                                        {{ date('d M, Y H:i', strtotime($visitor_detail->visite_time)) }} 
+                                    @endif
+
+                                    @if($visitor_detail->pre_visit_date_time)
+                                        {{ date('d M, Y', strtotime($visitor_detail->pre_visit_date_time)) }} 
+                                    @endif</div>
+                      <button style="--bs-bg-opacity: 1;
+    background-color: rgba(var(--bs-success-rgb),var(--bs-bg-opacity))!important;
+" type="button" class="bg-success text-white">Status is  @if(@$visitor_detail->status =='0') Pending
+                        @elseif(@$visitor_detail->status =='1') 
+                             Approved
+                        @elseif(@$visitor_detail->status =='3') 
+                           Blocked
+                        @elseif(@$visitor_detail->status =='5') 
+                           Cancelled
+                        @elseif(@$visitor_detail->status =='2') 
+                            Approved
+                        @endif
+                        </button>
+                  </div>
+                  <div class="col-md-12" style="background: #ececec; padding: 15px; border-radius: 5px;">
+                      <div class="row">
+                          <div class="col-md-8">
+                                <div class="icon_text">Here to see</div>
+                                <div class="icon_text" style="font-size: 30px; font-weight: 100;">{{ $visitor_detail->OfficerDetail->name }}</div>
+                                <div class="icon_text">{{@$visitor_detail->OfficerDetail->mobile}}</div>
+                              <!--   <div class="icon_text">18-8-2022, 5:50 PM</div> -->
+                          </div>
+                           <div class="col-md-4">
+                           <!--   <img src="assets/img/icons/girl.png" width="100%"> -->
+                          </div>
+                      </div>
+                  </div>
+                  <div class="text-center mb-2 mt-3">
+                      {!! QrCode::size(140)->generate($qr_url); !!}
+                  </div>
+              </div>
+          </div>
+            <div class="modal-footer" style="width:100%;background: #fcc98c;height: 15px;"></div>
+        </div>
+      
+
+<section class="noPrint">
         <div class="row">
             <div class="col-md-1 seceen_two_left">
                 <a href="/"><img src="{!! asset('assets/images/home.png') !!}"></a>
@@ -29,7 +89,7 @@
                         @endif
                         
                         <br>
-                        <i class="bi bi-printer" style="font-size: 35px; color: #9e9e9e;"></i> &nbsp;&nbsp; <i class="bi bi-person-video2" style="font-size: 35px; color: #9e9e9e;"></i>
+                        <a style="cursor: pointer;" onclick="window.print();"> <i class="bi bi-printer" style="font-size: 35px; color: #9e9e9e;"></i></a><!--  &nbsp;&nbsp; <i class="bi bi-person-video2" style="font-size: 35px; color: #9e9e9e;"></i> -->
                         
                         <div class="bottm_text">Preview</div>
                     </div>
@@ -43,9 +103,7 @@
                             </div>
                             <div class="col-md-4">
                               <!--   <img src="assets/img/icons/user33.png" style="width: 50%;"> -->
-                                @php
-                                        $image = str_replace('/public','',URL::to('/')).'/storage/app/public/'.$visitor_detail->image;
-                                        @endphp
+                                
                                         @if($visitor_detail->image)
                                         <img src="{!! asset('uploads/img/'.$visitor_detail->image) !!}" class="img-responsive" style="width: 170px; height: 170px;
                                          border-radius: 50%;">
@@ -57,18 +115,26 @@
                         </div>
                         <div class="row">
                             <div class="col-md-4">
+                                @if(isset($visitor_detail->city->name))
                                 <div class="icon_text"><i class="bi bi-building"></i> &nbsp;{{@$visitor_detail->city->name}}</div>
+                                @endif
                             </div>
                             <div class="col-md-4">
+                                @if(isset($visitor_detail->pincode))
                                 <div class="icon_text"><i class="bi bi-pin-map"></i> &nbsp;{{@$visitor_detail->pincode}}</div>
+                                @endif
                             </div>
                             <div class="col-md-4">
+                                @if(isset($visitor_detail->country->name))
                                 <div class="icon_text"><i class="bi bi-flag"></i> &nbsp;{{@$visitor_detail->country->name}}</div>
+                                @endif
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-12">
+                                @if(isset($visitor_detail->address_1))
                                 <div class="icon_text"><i class="bi bi-geo-alt"></i> &nbsp;{{@$visitor_detail->address_1}}</div>
+                                @endif
                             </div>
                         </div>
                         <br>
@@ -111,29 +177,59 @@
                         <div class="detsils_title">Visit purpose &amp; timing &nbsp;&nbsp;&nbsp; <!-- <i class="bi bi-pencil-square"></i> --></div>
                         <div class="row">
                             <div class="col-md-6">
+                            <div class="row">
+                            <div class="col-md-6" style="text-align: center;">
                                 
                                 @if($visitor_detail->services == 'Personal')
                                 <img src="{!! asset('assets/images/icons-y.png') !!}">
+                                <p style="font-size: 16px; margin-bottom: 10px; margin-top: 8px;">Personal</p>
                                 @elseif($visitor_detail->services == 'Official')
-                                <img src="{!! asset('assets/images/icons-2-y.png') !!}">   
+                                <img src="{!! asset('assets/images/icons-2-y.png') !!}"> 
+                                <p style="font-size: 16px; margin-bottom: 10px; margin-top: 8px;">Official</p>  
                                 @elseif($visitor_detail->services == 'Service')
                                 <img src="{!! asset('assets/images/icons-5-y.png') !!}">
+                                <p style="font-size: 16px; margin-bottom: 10px; margin-top: 8px;">Service</p> 
                                 @elseif($visitor_detail->services == 'Interview')
                                 <img src="{!! asset('assets/images/icons-1-y.png') !!}">
+                                <p style="font-size: 16px; margin-bottom: 10px; margin-top: 8px;">Interview</p> 
                                 @elseif($visitor_detail->services == 'Meeting')
                                 <img src="{!! asset('assets/images/icons-3-y.png') !!}"> 
+                                <p style="font-size: 16px; margin-bottom: 10px; margin-top: 8px;">Meeting</p> 
                                 @elseif($visitor_detail->services == 'Deliver')
                                 <img src="{!! asset('assets/images/icons-6-y.png') !!}"> 
+                                <p style="font-size: 16px; margin-bottom: 10px; margin-top: 8px;">Deliver</p> 
                                 @endif  &nbsp;&nbsp; 
-
+                            </div>
+                             <div class="col-md-6">
                                 <img src="{!! asset('assets/images/Rectangle-50.png') !!}">
                             </div>
+                            </div>
+                            </div>
                             <div class="col-md-6">
-                                <div class="icon_text"><i class="bi bi-hash"></i> &nbsp;{{@$visitor_detail->topic}}</div>
+                                @if($visitor_detail->topic) 
+                                <div class="icon_text"><i class="bi bi-hash"></i> &nbsp;{{@$visitor_detail->topic}}</div> @endif
                                 <div class="icon_text"><i class="bi bi-clock"></i> &nbsp;{{@$visitor_detail->visite_duration}} Minuts</div>
                                 <div class="row">
-                                    <div class="col-md-6"><div class="icon_text"><i class="bi bi-calendar"></i> &nbsp;{{ date('d M, Y', strtotime($visitor_detail->visite_time)) }} </div></div>
-                                    <div class="col-md-6"><div class="icon_text"><i class="bi bi-clock"></i> &nbsp;{{ date('h:i A', strtotime($visitor_detail->visite_time)) }}</div></div>
+                                    <div class="col-md-6"><div class="icon_text"><i class="bi bi-calendar"></i> &nbsp;
+                                    @if($visitor_detail->visite_time)
+                                        {{ date('d M, Y', strtotime($visitor_detail->visite_time)) }} 
+                                    @endif
+
+                                    @if($visitor_detail->pre_visit_date_time)
+                                        {{ date('d M, Y', strtotime($visitor_detail->pre_visit_date_time)) }} 
+                                    @endif
+
+                                    </div></div>
+                                    <div class="col-md-6"><div class="icon_text"><i class="bi bi-clock"></i> &nbsp;
+                                    @if($visitor_detail->visite_time)   
+                                     {{ date('h:i A', strtotime($visitor_detail->visite_time)) }}
+                                    @endif
+
+                                    @if($visitor_detail->pre_visit_date_time)   
+                                     {{ date('h:i A', strtotime($visitor_detail->pre_visit_date_time)) }}
+                                    @endif
+
+                                    </div></div>
                                 </div>
                             </div>
                         </div>
@@ -142,24 +238,36 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="detsils_title">Firm Detail &nbsp;&nbsp;&nbsp; <!-- <i class="bi bi-pencil-square"></i> --></div>
-                                <div class="icon_text"><i class="bi bi-briefcase"></i> &nbsp;{{@$visitor_detail->organization_name?@$visitor_detail->organization_name:'N/A'}} </div>
+                                @if($visitor_detail->organization_name)
+                                <div class="icon_text"><i class="bi bi-briefcase"></i> &nbsp;{{@$visitor_detail->organization_name?@$visitor_detail->organization_name:'N/A'}} </div> 
+                                @endif
+                                @if($visitor_detail->firm_address)
                                 <div class="icon_text"><i class="bi bi-geo-alt"></i> &nbsp; {{@$visitor_detail->firm_address?@$visitor_detail->firm_address:'N/A'}}</div>
+                                @endif
+                                @if($visitor_detail->firm_email)
                                 <div class="icon_text"><i class="bi bi-envelope"></i> &nbsp; {{@$visitor_detail->firm_email?@$visitor_detail->firm_email:'N/A'}}</div>
+                                @endif
+                                @if($visitor_detail->firm_contact)
                                 <div class="icon_text"><i class="bi bi-tablet"></i> &nbsp; {{@$visitor_detail->firm_contact?@$visitor_detail->firm_contact:'N/A'}}</div>
+                                @endif
+                                @if($visitor_detail->orga_pincode)
                                 <div class="icon_text"><i class="bi bi-pin-map"></i> &nbsp; {{@$visitor_detail->orga_pincode?@$visitor_detail->orga_pincode:'N/A'}}</div>
+                                @endif
+                                @if($visitor_detail->firm_id)
                                 <div class="icon_text"><i class="bi bi-person-badge"></i> &nbsp;{{@$visitor_detail->firm_id?@$visitor_detail->firm_id:'N/A'}} </div>
+                                @endif
                                 @if($visitor_detail->signature)
                                 <div class="icon_text"><i class="bi bi-pen"></i> &nbsp;<img src="{!! asset('uploads/img/'.$visitor_detail->signature) !!}" class="img-responsive"></div>
                                 @endif
                             </div>
                              <div class="col-md-6">
                                 <div class="detsils_title">Identity Proof &nbsp;&nbsp;&nbsp;<!--  <i class="bi bi-pencil-square"></i> --></div>
-                                 <div class="icon_text"><i class="bi bi-person-badge"></i> &nbsp;{{ $visitor_detail->adhar_no }}</div>
-
+                                @if($visitor_detail->adhar_no)
+                                <div class="icon_text"><i class="bi bi-person-badge"></i> &nbsp;{{ $visitor_detail->adhar_no }}</div>
+                                @endif
                                       @if(@$visitor_detail->attachmant)
                                         <a target="_blank" href="{!! asset('uploads/img/'.$visitor_detail->attachmant) !!}"><img src="{!! asset('uploads/img/'.$visitor_detail->attachmant) !!}" class="img-responsive"></a>
-                                        @else
-                                        <img src="https://vztor.in/superadmin/public/assets/images/demo_doc.jpg" class="img-responsive">
+                                      
                                         @endif
 
                                 

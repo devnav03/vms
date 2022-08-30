@@ -1895,11 +1895,11 @@ $image_data = '';
   {
     $company_data = $this->company_data;
     $depa_id = $request->department_id;
-    $data['states'] = Admin::join('designations', 'admins.designation_id', '=', 'designations.id')
-    ->where(["admins.department_id" => $depa_id, "admins.status_id" => 1])
-	->get(["admins.name", "admins.id", 'designations.name as designations']); 
-	  // commented by suresh //13 dec 2021
-    // $data['states'] = Admin::where(["department_id" => $depa_id, "status_id" => 1])->get(["name", "id"]);
+ //    $data['states'] = Admin::join('designations', 'admins.designation_id', '=', 'designations.id')
+ //    ->where(["admins.department_id" => $depa_id, "admins.status_id" => 1])
+	// ->get(["admins.name", "admins.id", 'designations.name as designations']); 
+	  
+    $data['states'] = Admin::where(["department_id" => $depa_id, "status_id" => 1])->get(["name", "id"]);
     return response()->json($data);
   }
   public function deviceDepartments(Request $request)
@@ -2274,6 +2274,8 @@ $image_data = '';
 	}
 
 	public function gaurdDashboard(){
+
+    try {
    
 		if (Auth::check()) {
 			$datas = User::with(['all_visit'=>function($q){
@@ -2282,19 +2284,24 @@ $image_data = '';
 				$query->select('id', 'user_id','in_status','out_status');
 				$query->where('out_status','=', 'No');
 			})->where('building_id', Auth::User()->building_id)->with(['OfficerDetail' => function ($query) {
-			  $query->select('id', 'name');
-			}])->where('pre_visit_date_time',NULL)->orderBy('id', 'desc')->get(); 		
+			  $query->select('id', 'name', 'mobile');
+			}])->where('pre_visit_date_time',NULL)->orderBy('id', 'desc')->paginate(10); 		
       //dd($datas);
       $company_data = $this->company_data;   
       $pre_invitation_lists = User::where(['status'=>2,'company_id'=>$company_data->id])->where('building_id', Auth::User()->building_id)->with(['OfficerDetail' => function ($query) {
-			  $query->select('id', 'name');
+			  $query->select('id', 'name', 'mobile');
 			}])->with(['all_visit'=>function($q){
         $q->select('id', 'user_id','in_status','in_time','out_status');
       }])->orderBy('id', 'desc')->get();
   
 			return view('web.gaurd_dashboard',compact('datas','pre_invitation_lists'));
 		}
-		return redirect('guard/login');		
+		return redirect('guard/login');	
+
+    } catch(\Exception $exception) {
+            return back();
+      }
+
 	}
 
 

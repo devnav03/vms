@@ -234,7 +234,7 @@
 		$("#officer_id").html('');
         $("#loader-p").show();
         $.ajax({
-            url:"{{url('/web-get-building')}}",
+            url:"{{url('/web-get-building-front')}}",
             type: "POST",
             data: {
             location_id: location_id,
