@@ -23,7 +23,6 @@ use Illuminate\Http\Request;
 */
 
 
-
 Route::get('/reset', function (){
     Artisan::call('route:clear');
     Artisan::call('cache:clear');
